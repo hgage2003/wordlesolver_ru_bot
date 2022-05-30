@@ -5,6 +5,9 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
 from aiogram import Bot, types
 
+from config import *
+
+from game import Game
 
 TOKEN = os.getenv('BOT_TOKEN')
 bot = Bot(token=TOKEN)
@@ -21,6 +24,9 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 WEBAPP_HOST = '0.0.0.0'
 WEBAPP_PORT = os.getenv('PORT', default=8000)
 
+# running games
+games = {}
+
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
@@ -32,7 +38,15 @@ async def on_shutdown(dispatcher):
 
 @dp.message_handler()
 async def echo(message: types.Message):
-    await message.answer(message.text)
+    user = message.from_user.id
+    if not games.get(user):
+        games[user] = Game()
+        init = games[user].prepare(DICT_FILE)
+        if not init:
+            await message.answer("Ошибка инициализации %1".format(DICT_FILE))
+            return
+    answer = await games[user].play(message.text)
+    await message.answer(answer)
 
 
 if __name__ == '__main__':
