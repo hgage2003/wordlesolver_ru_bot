@@ -34,6 +34,9 @@ class Game:
     def __init__(self):
         self.__words = []
         self.__game = []
+        self.__phase = 0
+        self.__last_answer = ""
+        self.__last_mask = ""
 
     def results(self):
         return self.__game
@@ -84,8 +87,18 @@ class Game:
                 self.__game = [w for w in self.__game if w[idx] != pattern[idx]]
 
     def play(self, message):
-        return "Let's a Go!"
-
+        match self.__phase:
+            case 0: # спрашиваем слово
+                self.__phase += 1
+                return "Какое слово отправил в Wordle?"
+            case 1: # спрашиваем положение
+                self.__last_answer = message
+                self.__phase += 1
+                return "Что ответил Wordle?"
+            case 2: # играем
+                self.__last_mask = message
+                self.__phase = 0
+                return "Ура!"
 
 def test():
     games = {}
