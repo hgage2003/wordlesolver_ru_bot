@@ -6,9 +6,9 @@ def prepare_word(word: str) -> str:
     letters = list(word.lower())
 
     if LANG == 'ru':
-        for idx in range(len(letters)):
+        for idx in range(len(letters) - 1):
             if not letters[idx].isalpha():  # убрать дефисы и прочие недоразумения
-                return ""
+                return str()
             if letters[idx] == 'ё':
                 letters[idx] = 'е'
 
@@ -61,7 +61,7 @@ class Game:
         # убираем Ё и повторы
         self.__words = [prepare_word(w) for w in self.__words if len(w) == WORD_LEN + 1]
         self.__words = list(set(self.__words))
-        self.__words.remove("")
+        self.__words.remove(str())
         self.reset()
         return True
 
@@ -146,7 +146,7 @@ def test():
     games = {}
 
     while True:
-        user = "id"
+        user = "id1"
         text = input("Play: ")
         if not games.get(user):
             games[user] = Game()
