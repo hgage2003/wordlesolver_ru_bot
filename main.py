@@ -46,8 +46,11 @@ async def echo(message: types.Message):
             await message.answer("Ошибка инициализации %1".format(DICT_FILE))
             return
     answer = games[user].play(message.text)
-    await message.answer(answer)
-
+    if len(answer) > 4096:
+        for x in range(0, len(answer), 4096):
+            await message.answer(answer[x:x + 4096])
+        else:
+            await message.answer(answer)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
