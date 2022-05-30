@@ -77,7 +77,8 @@ class Game:
         self.__game = list(filter(r.match, self.__game))
 
         # из них убираем все с серыми буквами из неотгаданных!
-        self.__game = list(filter(lambda e: exclude(e, "".join(grey).lower(), pattern), self.__game))
+        if len(grey):
+            self.__game = list(filter(lambda e: exclude(e, "".join(grey).lower(), pattern), self.__game))
 
         # желтая маска и буквы в ней
         pattern = ['.'] * WORD_LEN
