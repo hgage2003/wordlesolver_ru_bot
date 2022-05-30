@@ -45,7 +45,7 @@ async def echo(message: types.Message):
         if not init:
             await message.answer("Ошибка инициализации %1".format(DICT_FILE))
             return
-    answer = await games[user].play(message.text)
+    answer = games[user].play(message.text)
     await message.answer(answer)
 
 

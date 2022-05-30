@@ -85,3 +85,22 @@ class Game:
 
     def play(self, message):
         return "Let's a Go!"
+
+
+def test():
+    games = {}
+
+    while True:
+        user = "message.from_user.id"
+        text = input("Play: ")
+        if not games.get(user):
+            games[user] = Game()
+            init = games[user].prepare(DICT_FILE)
+            if not init:
+                print("Ошибка инициализации %1".format(DICT_FILE))
+                return
+        print(games[user].play(text))
+
+
+if __name__ == '__main__':
+    test()
