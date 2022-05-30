@@ -111,7 +111,8 @@ class Game:
                 else:
                     self.__last_answer = message
                     self.__phase = 2
-                    reply.append("Что ответил Wordle?")
+                    reply.append("Что ответил Wordle? \nПришли число из 5 цифр 0, 1 или 2\n"
+                                 "0 - буква серая, 1 - желтая, 2 - зеленая")
             case 2:
                 if not check_mask(message):
                     reply.append("Неправильная маска, должно быть что-то типа 01102")
