@@ -30,13 +30,21 @@ def include(word, letters):
     return True
 
 
+def check_mask(mask):
+    if len(mask) != WORD_LEN:
+        return False
+    for i in range(WORD_LEN):
+        if not ['0', '1', '2'].count(mask[i]):
+            return False
+    return True
+
+
 class Game:
     def __init__(self):
         self.__words = []
         self.__game = []
         self.__phase = 0
         self.__last_answer = ""
-        self.__last_mask = ""
 
     def results(self):
         return self.__game
@@ -56,6 +64,7 @@ class Game:
 
     def reset(self):
         self.__game = self.__words
+        self.__phase = 0
 
     def make_turn(self, green, yellow, grey):
         # оставляем только слова по зелёной маске
@@ -87,24 +96,48 @@ class Game:
                 self.__game = [w for w in self.__game if w[idx] != pattern[idx]]
 
     def play(self, message):
+        reply = []
+        if message == '/start':
+            self.reset()
+
         match self.__phase:
-            case 0: # спрашиваем слово
-                self.__phase += 1
-                return "Какое слово отправил в Wordle?"
-            case 1: # спрашиваем положение
-                self.__last_answer = message
-                self.__phase += 1
-                return "Что ответил Wordle?"
-            case 2: # играем
-                self.__last_mask = message
-                self.__phase = 0
-                return "Ура!"
+            case 0:  # спрашиваем слово
+                reply.append("Какое слово отправил в Wordle?")
+                self.__phase = 1
+            case 1:  # спрашиваем положение
+                if len(message) != 5:
+                    reply.append("Пришли слово из 5 букв")
+                else:
+                    self.__last_answer = message
+                    self.__phase = 2
+                    reply.append("Что ответил Wordle?")
+            case 2:
+                if not check_mask(message):
+                    reply.append("Неправильная маска, должно быть что-то типа 01102")
+                else:
+                    green = ['.'] * WORD_LEN
+                    yellow = ['.'] * WORD_LEN
+                    grey = []
+                    for i in range(WORD_LEN):
+                        match message[i]:
+                            case '0':
+                                grey.append(self.__last_answer[i])
+                            case '1':
+                                yellow[i] = self.__last_answer[i]
+                            case '2':
+                                green[i] = self.__last_answer[i]
+                    self.make_turn(green, yellow, grey)
+                    reply.extend(self.__game)
+                    reply.append("Какое слово отправил в Wordle?")
+                self.__phase = 1
+        return "".join(reply)
+
 
 def test():
     games = {}
 
     while True:
-        user = "message.from_user.id"
+        user = "id"
         text = input("Play: ")
         if not games.get(user):
             games[user] = Game()
