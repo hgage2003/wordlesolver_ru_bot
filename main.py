@@ -49,8 +49,8 @@ async def echo(message: types.Message):
     if len(answer) > 4096:
         for x in range(0, len(answer), 4096):
             await message.answer(answer[x:x + 4096])
-        else:
-            await message.answer(answer)
+    else:
+        await message.answer(answer)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
