@@ -128,9 +128,13 @@ class Game:
                             case '2':
                                 green[i] = self.__last_answer[i]
                     self.make_turn(green, yellow, grey)
-                    reply.extend(self.__game)
-                    reply.append("Какое слово отправил в Wordle?")
-                self.__phase = 1
+                    if len(self.__game):
+                        reply.extend(self.__game)
+                        reply.append("Какое слово отправил в Wordle? (Начать сначала: /start)")
+                        self.__phase = 1
+                    else:
+                        reply.append("Кажется, я не знаю этого слова. (Начать сначала: /start)")
+                        self.reset()
         return "".join(reply)
 
 
