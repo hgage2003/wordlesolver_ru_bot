@@ -51,6 +51,7 @@ async def echo(message: types.Message):
     user = message.from_user.id
     if not games.get(user):
         games[user] = Game()
+        games[user].current_menu = 'start'
         init = games[user].prepare(DICT_FILE)
         if not init:
             await message.answer("Ошибка инициализации %1".format(DICT_FILE))
