@@ -84,9 +84,8 @@ async def echo(message: types.Message):
         if len(words):
             await _reply(message, '\n'.join(words))
         else:
-            await _reply(message, "Кажется, я не знаю такого слова...\n"
-                                  "Пришли /start чтобы отгадать другое")
-
+            await _reply(message, "Кажется, я не знаю такого слова...")
+            new_menu = 'start'
 
     games[user].current_menu = new_menu
     await _reply(message, menu[games[user].current_menu].info)
