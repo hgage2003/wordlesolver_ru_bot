@@ -80,7 +80,13 @@ async def echo(message: types.Message):
                     yellow[i] = word[i].lower()
                 case '2':
                     green[i] = word[i].lower()
-        await _reply(message, '\n'.join(games[user].make_turn(green, yellow, grey)))
+        words = games[user].make_turn(green, yellow, grey)
+        if len(words):
+            await _reply(message, '\n'.join(words))
+        else:
+            await _reply(message, "Кажется, я не знаю такого слова...\n"
+                                  "Пришли /start чтобы отгадать другое")
+
 
     games[user].current_menu = new_menu
     await _reply(message, menu[games[user].current_menu].info)
