@@ -41,8 +41,7 @@ def check_word(word: str) -> (bool, str):
 class WordMenu(Menu):
     def __init__(self):
         super().__init__('word', 'mask')
-        self.info = "Какое слово отправил в Wordle?\n" \
-                    "Новое слово: /start"
+        self.info = "Какое слово отправил в Wordle?"
 
     def process(self, text: str) -> (str, Result):
         check = check_word(text)
