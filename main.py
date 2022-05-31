@@ -39,9 +39,15 @@ async def on_shutdown(dispatcher):
 
 
 async def _reply(msg, text: str):
-    if len(text) > 4096:
-        for x in range(0, len(text), 4096):
-            await msg.answer(text[x:x + 4096])
+    while len(text) > 4096:
+        x = text[:4096].rfind('\n')
+        if x < 0:
+            x = text[:4096].rfind(' ')
+            if x < 0:
+                await msg.answer('Ошибка, текст не разбивается на сообщения')
+                return
+        await msg.answer(text[:x])
+        text = text[x:]
     else:
         await msg.answer(text)
 
