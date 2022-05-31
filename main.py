@@ -48,7 +48,7 @@ async def _reply(msg, text: str):
                 return
         await msg.answer(text[:x])
         text = text[x:]
-    else:
+    if len(text) > 0:
         await msg.answer(text)
 
 
