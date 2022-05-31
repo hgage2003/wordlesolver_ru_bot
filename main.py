@@ -82,6 +82,7 @@ async def echo(message: types.Message):
         await _reply(message, games[user].make_turn(green, yellow, grey))
 
     games[user].current_menu = new_menu
+    await _reply(message, menu[games[user].current_menu].info)
 
 
 if __name__ == '__main__':
