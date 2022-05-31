@@ -1,2 +1,4 @@
 .idea/
 __pycache__/
+5letters.*
+words-russian-nouns.sql
