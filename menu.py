@@ -26,7 +26,7 @@ class StartMenu(Menu):
         if text == '/start':
             return self.advance_id, Result(True, str())
         else:
-            return self.id, Result(False, "Пришлите /start чтобы начать")
+            return self.id, Result(True, str())  # не нужно дополнительных сообщений
 
 
 def check_word(word: str) -> (bool, str):

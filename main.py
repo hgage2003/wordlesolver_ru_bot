@@ -38,7 +38,7 @@ async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
 
-async def _reply(msg, text):
+async def _reply(msg, text: str):
     if len(text) > 4096:
         for x in range(0, len(text), 4096):
             await msg.answer(text[x:x + 4096])
@@ -80,7 +80,7 @@ async def echo(message: types.Message):
                     yellow[i] = word[i].lower()
                 case '2':
                     green[i] = word[i].lower()
-        await _reply(message, games[user].make_turn(green, yellow, grey))
+        await _reply(message, '\n'.join(games[user].make_turn(green, yellow, grey)))
 
     games[user].current_menu = new_menu
     await _reply(message, menu[games[user].current_menu].info)
