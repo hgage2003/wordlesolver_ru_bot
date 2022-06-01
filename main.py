@@ -62,6 +62,8 @@ async def echo(message: types.Message):
         if not init:
             await message.answer("Ошибка инициализации %1".format(DICT_FILE))
             return
+        
+    new_menu = games[user].current_menu
 
     if message.text == '/start':
         games[user].reset()
