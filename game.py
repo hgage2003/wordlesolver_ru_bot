@@ -12,12 +12,11 @@ def prepare_word(word: str) -> str:
     if len(letters) != WORD_LEN:
         return str()
 
-    if LANG == 'ru':
-        for idx in range(len(letters)):
-            if not letters[idx].isalpha():  # убрать дефисы и прочие недоразумения
-                return str()
-            if letters[idx] == 'ё':
-                letters[idx] = 'е'
+    for idx in range(len(letters)):
+        if not letters[idx].isalpha():  # убрать дефисы и прочие недоразумения
+            return str()
+        if letters[idx] == 'ё':
+            letters[idx] = 'е'
 
     return "".join(letters)
 
