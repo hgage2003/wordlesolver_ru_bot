@@ -77,11 +77,11 @@ async def echo(message: types.Message):
         games[user].last_answer = result[1]
         new_menu = MenuId.MASK
     elif games[user].current_menu == MenuId.MASK:
-        word = games[user].last_answer
-        if word == '22222':
+        if message.text == '22222':
             await _reply(message, "Ура! Поздравляю!")
             new_menu = MenuId.START
         else:
+            word = games[user].last_answer
             green = ['.'] * WORD_LEN
             yellow = ['.'] * WORD_LEN
             grey = []
