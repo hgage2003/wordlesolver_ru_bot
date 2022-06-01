@@ -62,7 +62,7 @@ async def echo(message: types.Message):
         if not init:
             await message.answer("Ошибка инициализации %1".format(DICT_FILE))
             return
-        
+
     new_menu = games[user].current_menu
 
     if message.text == '/start':
@@ -75,6 +75,7 @@ async def echo(message: types.Message):
         await _reply(message, result[1])
     elif games[user].current_menu == MenuId.WORD:
         games[user].last_answer = result[1]
+        new_menu = MenuId.MASK
     elif games[user].current_menu == MenuId.MASK:
         word = games[user].last_answer
         green = ['.'] * WORD_LEN
