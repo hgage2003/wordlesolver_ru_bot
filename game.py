@@ -94,10 +94,9 @@ class Game:
 
 def test():
     games = {}
-    menu = {'start': StartMenu(), 'word': WordMenu(), 'mask': MaskMenu()}
+    menu = {MenuId.START: Menu(MenuId.START, START_INFO), MenuId.WORD: WordMenu(), MenuId.MASK: MaskMenu()}
 
     user = "id1"
-    result = Result()
 
     if not games.get(user):
         games[user] = Game()
@@ -105,21 +104,25 @@ def test():
         if not init:
             print("Ошибка инициализации %1".format(DICT_FILE))
             return
-        games[user].current_menu = 'start'
+        games[user].current_menu = MenuId.START
 
     while True:
-        text = input(menu[games[user].current_menu].info)
+        text = input()
         if isinstance(text, str):
+            new_menu = games[user].current_menu
+
             if text == '/start':
                 games[user].reset()
-                games[user].current_menu = 'start'
+                games[user].current_menu = MenuId.START
+                new_menu = MenuId.WORD
 
-            new_menu, result = menu[games[user].current_menu].process(text)
-            if not result.status:
-                print(result.text)
-            elif games[user].current_menu == 'word':
-                games[user].last_answer = result.text
-            elif games[user].current_menu == 'mask':
+            result = menu[games[user].current_menu].process(text)
+            if not result[0]:
+                print(result[1])
+            elif games[user].current_menu == MenuId.WORD:
+                games[user].last_answer = result[1]
+                new_menu = MenuId.MASK
+            elif games[user].current_menu == MenuId.MASK:
                 word = games[user].last_answer
                 green = ['.'] * WORD_LEN
                 yellow = ['.'] * WORD_LEN
@@ -134,8 +137,10 @@ def test():
                         case '2':
                             green[i] = word[i].lower()
                 print(games[user].make_turn(green, yellow, grey))
+                new_menu = MenuId.WORD
 
             games[user].current_menu = new_menu
+            print(menu[games[user].current_menu].info)
 
 
 if __name__ == '__main__':

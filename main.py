@@ -27,7 +27,7 @@ WEBAPP_PORT = os.getenv('PORT', default=8000)
 
 # running games
 games = {}
-menu = {'start': StartMenu(), 'word': WordMenu(), 'mask': MaskMenu()}
+menu = {MenuId.START: Menu(MenuId.START, START_INFO), MenuId.WORD: WordMenu(), MenuId.MASK: MaskMenu()}
 
 
 async def on_startup(dispatcher):
@@ -57,7 +57,7 @@ async def echo(message: types.Message):
     user = message.from_user.id
     if not games.get(user):
         games[user] = Game()
-        games[user].current_menu = 'start'
+        games[user].current_menu = MenuId.START
         init = games[user].prepare(DICT_FILE)
         if not init:
             await message.answer("Ошибка инициализации %1".format(DICT_FILE))
@@ -65,14 +65,15 @@ async def echo(message: types.Message):
 
     if message.text == '/start':
         games[user].reset()
-        games[user].current_menu = 'start'
+        games[user].current_menu = MenuId.START
+        new_menu = MenuId.WORD
 
-    new_menu, result = menu[games[user].current_menu].process(message.text)
-    if not result.status:
-        await _reply(message, result.text)
-    elif games[user].current_menu == 'word':
-        games[user].last_answer = result.text
-    elif games[user].current_menu == 'mask':
+    result = menu[games[user].current_menu].process(message.text)
+    if not result[0]:
+        await _reply(message, result[1])
+    elif games[user].current_menu == MenuId.WORD:
+        games[user].last_answer = result[1]
+    elif games[user].current_menu == MenuId.MASK:
         word = games[user].last_answer
         green = ['.'] * WORD_LEN
         yellow = ['.'] * WORD_LEN
@@ -89,9 +90,10 @@ async def echo(message: types.Message):
         words = games[user].make_turn(green, yellow, grey)
         if len(words):
             await _reply(message, '\n'.join(words))
+            new_menu = MenuId.WORD
         else:
             await _reply(message, "Кажется, я не знаю такого слова...")
-            new_menu = 'start'
+            new_menu = MenuId.START
 
     games[user].current_menu = new_menu
     await _reply(message, menu[games[user].current_menu].info)
