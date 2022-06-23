@@ -52,7 +52,7 @@ async def _reply(msg, text: str):
         await msg.answer(text)
 
 
-@dp.callback_query_handler(func=lambda c: c.data and c.data.startswith('btn'))
+@dp.callback_query_handler()
 async def process_buttons(callback_query: types.CallbackQuery):
     button = callback_query.data
     user = callback_query.from_user.id
