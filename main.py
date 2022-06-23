@@ -52,12 +52,12 @@ async def _reply(msg, text: str):
         await msg.answer(text)
 
 
-@dp.callback_query_handler(func=lambda c: c.data)
+@dp.callback_query_handler(func=lambda c: c.data and c.data.startswith('btn'))
 async def process_buttons(callback_query: types.CallbackQuery):
     button = callback_query.data
     user = callback_query.from_user.id
 
-    if button == 'all_good':
+    if button == 'btn_all_good':
         words = games[user].results()
         text = '\n'.join(words)
         await _reply(text)
