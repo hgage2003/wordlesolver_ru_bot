@@ -4,6 +4,7 @@ from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
 from aiogram import Bot, types
+import keyboards as kb
 
 from config import *
 from menu import *
@@ -95,15 +96,21 @@ async def echo(message: types.Message):
                     case '2':
                         green[i] = word[i].lower()
             words = games[user].make_turn(green, yellow, grey)
-            if len(words):
-                await _reply(message, '\n'.join(words))
-                new_menu = MenuId.WORD
-            else:
-                await _reply(message, "Кажется, я не знаю такого слова...")
+            if not len(words):
+                await message.answer("Кажется, я не знаю такого слова...")
                 new_menu = MenuId.START
+            elif len(words) <= 10:
+                await message.answer('\n'.join(words))
+            else:
+                text = '\n'.join(words[:10])
+                await message.answer(text, reply_markup=kb.inline_kb1)
+        new_menu = MenuId.WORD
 
     games[user].current_menu = new_menu
     await _reply(message, menu[games[user].current_menu].info)
+
+
+
 
 
 if __name__ == '__main__':

@@ -21,10 +21,14 @@ def prepare_word(word: str) -> str:
     return "".join(letters)
 
 
-def exclude(word, letters, green):
-    for idx in range(len(word)):
-        if word[idx] in letters and green[idx] == '.':  # только в неотгаданных
-            return False
+def exclude(word, grey, included):
+    for ex in grey:
+        if ex not in included:
+            if ex in word:
+                return False
+        else:  # знаем сколько этих букв в слове
+            if not (word.count(ex) == included.count(ex)):
+                return False
     return True
 
 
@@ -71,14 +75,14 @@ class Game:
         r = re.compile("".join(green))
         self.__game = list(filter(r.match, self.__game))
 
-        # из них убираем все с серыми буквами из неотгаданных!
-        if len(grey):
-            self.__game = list(filter(lambda e: exclude(e, "".join(grey).lower(), green), self.__game))
-
         # желтая маска и буквы в ней
         incl_letters = green
         incl_letters.extend(yellow)
         incl_letters = [ltr.lower() for ltr in incl_letters if ltr.isalpha()]  # если буквы парные, нужно искать обе
+
+        # убираем все с серыми буквами, с учетом тех, что должны быть
+        if len(grey):
+            self.__game = list(filter(lambda e: exclude(e, "".join(grey).lower(), incl_letters), self.__game))
 
         # оставляем слова, содержащие все жёлтые буквы хоть раз
         self.__game = list(filter(lambda e: include(e, "".join(incl_letters)), self.__game))
