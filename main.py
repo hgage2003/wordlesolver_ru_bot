@@ -52,6 +52,20 @@ async def _reply(msg, text: str):
         await msg.answer(text)
 
 
+async def _send_message(user_id, text: str):
+    while len(text) > 4096:
+        x = text[:4096].rfind('\n')
+        if x < 0:
+            x = text[:4096].rfind(' ')
+            if x < 0:
+                await bot.send_message(user_id, 'Ошибка, текст не разбивается на сообщения')
+                return
+        await bot.send_message(user_id, text[:x])
+        text = text[x:]
+    if len(text) > 0:
+        await bot.send_message(user_id, text)
+
+
 @dp.callback_query_handler()
 async def process_buttons(callback_query: types.CallbackQuery):
     button = callback_query.data
@@ -60,7 +74,7 @@ async def process_buttons(callback_query: types.CallbackQuery):
     if button == 'btn_all_good':
         words = games[user].results()
         text = '\n'.join(words)
-        await _reply(text)
+        await _send_message(callback_query.from_user.id, text)
 
 
 @dp.message_handler()
