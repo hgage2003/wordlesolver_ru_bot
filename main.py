@@ -1,10 +1,9 @@
 import logging
 import os
-from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils.executor import start_webhook
 from aiogram import Bot, types
-import keyboards as kb
+#import keyboards as kb
 
 from config import *
 from menu import *
