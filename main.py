@@ -73,7 +73,7 @@ async def process_buttons(callback_query: types.CallbackQuery):
 
     if button == 'btn_all_good':
         words = games[user].results()
-        text = '\n'.join(words)
+        text = ' '.join(words)
         await _send_message(callback_query.from_user.id, text)
 
 
@@ -124,9 +124,9 @@ async def echo(message: types.Message):
                 await message.answer("Кажется, я не знаю такого слова...")
                 new_menu = MenuId.START
             elif len(words) <= 10:
-                await message.answer('\n'.join(words))
+                await message.answer(' '.join(words))
             else:
-                text = '\n'.join(words[:10])
+                text = ' '.join(words[:10])
                 await message.answer(text, reply_markup=kb.inline_kb1)
         new_menu = MenuId.WORD
 
