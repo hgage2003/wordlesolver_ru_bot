@@ -52,6 +52,17 @@ async def _reply(msg, text: str):
         await msg.answer(text)
 
 
+@dp.callback_query_handler(func=lambda c: c.data)
+async def process_buttons(callback_query: types.CallbackQuery):
+    button = callback_query.data
+    user = callback_query.from_user.id
+
+    if button == 'all_good':
+        words = games[user].results()
+        text = '\n'.join(words)
+        await _reply(text)
+
+
 @dp.message_handler()
 async def echo(message: types.Message):
     user = message.from_user.id
@@ -107,9 +118,6 @@ async def echo(message: types.Message):
 
     games[user].current_menu = new_menu
     await _reply(message, menu[games[user].current_menu].info)
-
-
-
 
 
 if __name__ == '__main__':
